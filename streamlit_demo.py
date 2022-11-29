@@ -1,6 +1,9 @@
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, AutoModelForQuestionAnswering, pipeline
 import streamlit as st
 
+import os
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
 summarization_tokenizer = AutoTokenizer.from_pretrained("Blaise-g/longt5_tglobal_large_sumpubmed")
 
 summarization_model = AutoModelForSeq2SeqLM.from_pretrained("Blaise-g/longt5_tglobal_large_sumpubmed") 
