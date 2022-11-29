@@ -1,18 +1,16 @@
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, AutoModelForQuestionAnswering, pipeline
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, AutoModelForQuestionAnswering #, pipeline
 import streamlit as st
 
-import os
-os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 summarization_tokenizer = AutoTokenizer.from_pretrained("Blaise-g/longt5_tglobal_large_sumpubmed")
 
 summarization_model = AutoModelForSeq2SeqLM.from_pretrained("Blaise-g/longt5_tglobal_large_sumpubmed") 
 
-qa_tokenizer = AutoTokenizer.from_pretrained("sultan/BioM-ELECTRA-Large-SQuAD2-BioASQ8B")
+#qa_tokenizer = AutoTokenizer.from_pretrained("sultan/BioM-ELECTRA-Large-SQuAD2-BioASQ8B")
 
-qa_model = AutoModelForQuestionAnswering.from_pretrained("sultan/BioM-ELECTRA-Large-SQuAD2-BioASQ8B")
+#qa_model = AutoModelForQuestionAnswering.from_pretrained("sultan/BioM-ELECTRA-Large-SQuAD2-BioASQ8B")
 
-question_answer = pipeline("question-answering", model=qa_model, tokenizer = qa_tokenizer)
+#question_answer = pipeline("question-answering", model=qa_model, tokenizer = qa_tokenizer)
 
 @st.cache
 
@@ -22,9 +20,6 @@ def summarize(note):
     preds = [summarization_tokenizer.decode(g, skip_special_tokens=True, clean_up_tokenization_spaces=True) for g in generated_ids]
     return preds[0]
 
-def qa(note, question): 
-    answer = question_answer(question = question , context = note)
-    return answer['answer']
 
 st.title('Machine Learning Based Clinical Summarization')
 st.header('Enter Sample Medical Note:')
@@ -34,11 +29,5 @@ if st.button('Generate Summary'):
     summary = summarize(note)
     st.success(summary)
 
-
-st.header('Ask a question related to the note:')
-question = st.text_area("Enter Question ❓")  
-if st.button('Generate Answer'):
-    answer = qa(note, question)
-    st.success(answer)
 
 
